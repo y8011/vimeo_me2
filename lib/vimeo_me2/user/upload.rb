@@ -5,9 +5,9 @@ module VimeoMe2
       # Upload a video object to the authenticated account
       #
       # @param [File] video A File that contains a valid video format
-      def upload_video video, name: nil
+      def upload_video video, name: nil, options: {}
         @video = video
-        @ticket = create_video
+        @ticket = create_video options
         start_upload
         video = change_name_and_get_video(name)
         return video
@@ -41,14 +41,11 @@ module VimeoMe2
         end
 
         # 3.4 Update
-        def create_video
+        def create_video options
           tus = {approach: 'tus', size: @video.size.to_s}
           body = {
             upload: tus,
-            privacy: {
-              view: 'nobody',
-              embed: 'public'},
-          }
+          }.merge!(options)
           post '/videos', body: body, code: 200
         end
 
