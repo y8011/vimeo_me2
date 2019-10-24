@@ -43,7 +43,12 @@ module VimeoMe2
         # 3.4 Update
         def create_video
           tus = {approach: 'tus', size: @video.size.to_s}
-          body = {upload: tus}
+          body = {
+            upload: tus,
+            privacy: {
+              view: 'nobody',
+              embed: 'public'},
+          }
           post '/videos', body: body, code: 200
         end
 
